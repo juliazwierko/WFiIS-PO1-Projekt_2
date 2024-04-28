@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <map>
 
 using namespace std;
 
@@ -8,65 +9,47 @@ class User {
 private:
     string username;
     string password;
-    vector<int> grades; // Dodajemy wektor ocen dla użytkownika
-
 public:
-    User(string username, string password) : username(username), password(password) {}
+    User(string _username, string _password) : username(_username), password(_password) {}
+    string getUsername() const { return username; }
+    // Funkcje związane z logowaniem i autoryzacją
+};
 
-    bool authenticate(string inputUsername, string inputPassword) const { // Dodajemy const
-        return username == inputUsername && password == inputPassword;
-    }
+class Student : private User {
+public:
+    using User::User; // Dziedziczenie konstruktora z User
+    string getStudentUsername() const { return getUsername(); } // Metoda umożliwiająca dostęp do nazwy użytkownika studenta
+};
 
-    string getUsername() const {
-        return username;
-    }
-
-    // Dodajemy funkcję do dodawania oceny do użytkownika
-    void addGrade(int grade) {
-        grades.push_back(grade);
-    }
-
-    // Dodajemy funkcję do pobierania ocen użytkownika
-    const vector<int>& getGrades() const {
-        return grades;
-    }
+class Teacher : private User {
+public:
+    using User::User; // Dziedziczenie konstruktora z User
+    string getTeacherUsername() const { return getUsername(); } // Metoda umożliwiająca dostęp do nazwy użytkownika nauczyciela
 };
 
 class Subject {
 private:
     string name;
-
+    Teacher* teacher;
+    map<Student*, vector<int>> grades; // Mapa ocen dla każdego ucznia
 public:
-    Subject(string name) : name(name) {}
-
-    string getName() const {
-        return name;
+    Subject(string _name, Teacher* _teacher) : name(_name), teacher(_teacher) {}
+    void addGrade(Student* student, int grade) {
+        grades[student].push_back(grade);
     }
-};
-
-class Assignment : private Subject {
-private:
-    string name;
-
-public:
-    Assignment(string name, string subject) : Subject(subject), name(name) {}
-
-    string getSubjectName() {
-        return getName();
-    }
-};
-
-class Grade : private Assignment {
-private:
-    User user;
-    int score;
-
-public:
-    Grade(User user, string assignment, string subject, int score) : user(user), Assignment(assignment, subject), score(score) {}
-
-    void displayGrade() {
-        cout << "User: " << user.getUsername() << endl;
-        cout << "Subject: " << getSubjectName() << endl;
-        cout << "Score: " << score << endl;
+    void printGrades(Student* student) {
+        cout << "Grades for subject " << name << ":" << endl;
+        auto it = grades.find(student);
+        if (it != grades.end()) {
+            cout << "Student: " << student->getStudentUsername() << endl;
+            cout << "Teacher: " << teacher->getTeacherUsername() << endl;
+            cout << "Grades: ";
+            for (int grade : it->second) {
+                cout << grade << " ";
+            }
+            cout << endl;
+        } else {
+            cout << "No grades found for student: " << student->getStudentUsername() << endl;
+        }
     }
 };
