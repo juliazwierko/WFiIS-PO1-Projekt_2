@@ -4,104 +4,57 @@
 
 using namespace std;
 
-// Klasa bazowa reprezentująca użytkownika
-class Uzytkownik {
+class User {
 private:
-    string imie;
-    string nazwisko;
-    string login;
-    string haslo; // Prywatne pole hasła
+    string username;
+    string password;
 
 public:
-    Uzytkownik(string im, string naz, string log, string pass) : imie(im), nazwisko(naz), login(log), haslo(pass) {}
+    User(string username, string password) : username(username), password(password) {}
 
-    void wyswietlInformacje() {
-        cout << "Imię: " << imie << endl;
-        cout << "Nazwisko: " << nazwisko << endl;
-        cout << "Login: " << login << endl;
-        // Nie wyświetlamy hasła
+    bool authenticate(string password) {
+        return this->password == password;
     }
 };
 
-// Klasa bazowa reprezentująca ocenę
-class Ocena {
-protected:
-    int wartosc;
-
-public:
-    Ocena(int w) : wartosc(w) {}
-
-    void wyswietlOcene() {
-        cout << "Ocena: " << wartosc << endl;
-    }
-};
-
-// Klasa bazowa reprezentująca zadanie
-class Zadanie {
-protected:
-    string nazwa;
-
-public:
-    Zadanie(string n) : nazwa(n) {}
-
-    void wyswietlZadanie() {
-        cout << "Nazwa zadania: " << nazwa << endl;
-    }
-};
-
-// Klasa bazowa reprezentująca przedmiot
-class Przedmiot {
-protected:
-    string nazwa;
-
-public:
-    Przedmiot(string n) : nazwa(n) {}
-
-    void wyswietlPrzedmiot() {
-        cout << "Nazwa przedmiotu: " << nazwa << endl;
-    }
-};
-
-// Klasy potomne reprezentujące różne typy ocen
-class OcenaEgzaminu : public Ocena {
+class Subject {
 private:
-    string nazwa_egzaminu;
+    string name;
 
 public:
-    OcenaEgzaminu(int w, string nazwa) : Ocena(w), nazwa_egzaminu(nazwa) {}
+    Subject(string name) : name(name) {}
 
-    void wyswietlOceneEgzaminu() {
-        wyswietlOcene();
-        cout << "Nazwa egzaminu: " << nazwa_egzaminu << endl;
+    string getName() const {
+        return name;
     }
 };
 
-class OcenaZadaniaDomowego : public Ocena {
+class Assignment : private Subject { 
 private:
-    string nazwa_zadania;
+    string name;
 
 public:
-    OcenaZadaniaDomowego(int w, string nazwa) : Ocena(w), nazwa_zadania(nazwa) {}
+    Assignment(string name, string subject) : Subject(subject), name(name) {}
 
-    void wyswietlOceneZadaniaDomowego() {
-        wyswietlOcene();
-        cout << "Nazwa zadania domowego: " << nazwa_zadania << endl;
+    string getSubjectName() {
+        return getName(); // Użycie metody getName() z klasy bazowej
     }
 };
 
-// Klasy potomne reprezentujące różne typy zadań
-class ZadanieDomowe : public Zadanie {
+
+class Grade : private Assignment { // dziedziczenie prywatne
+private:
+    User user;
+    int score;
+
 public:
-    ZadanieDomowe(string n) : Zadanie(n) {}
+    Grade(User user, string assignment, string subject, int score) : user(user), Assignment(assignment, subject), score(score) {}
+
+    void displayGrade() {
+        cout << "User: " << user.authenticate("password") << endl;
+        cout << "Subject: " << getSubjectName() << endl; // dostęp do metody klasy bazowej poprzez dziedziczenie prywatne
+        cout << "Score: " << score << endl;
+    }
 };
 
-// Klasy potomne reprezentujące różne przedmioty
-class PrzedmiotMatematyka : public Przedmiot {
-public:
-    PrzedmiotMatematyka() : Przedmiot("Matematyka") {}
-};
 
-class PrzedmiotJezykPolski : public Przedmiot {
-public:
-    PrzedmiotJezykPolski() : Przedmiot("Język Polski") {}
-};
