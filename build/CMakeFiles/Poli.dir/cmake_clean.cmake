@@ -1,10 +1,8 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/Poli.dir/main.cpp.obj"
-  "CMakeFiles/Poli.dir/main.cpp.obj.d"
-  "Poli.exe"
-  "Poli.exe.manifest"
+  "CMakeFiles/Poli.dir/main.cpp.o"
+  "CMakeFiles/Poli.dir/main.cpp.o.d"
+  "Poli"
   "Poli.pdb"
-  "libPoli.dll.a"
 )
 
 # Per-language clean rules from dependency scanning.

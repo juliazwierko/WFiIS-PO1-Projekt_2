@@ -1,0 +1,12 @@
+Student: Julia
+Math Grades: 5 5 
+C++ Grades: 4.5 5 
+
+Student: Sebastian
+Math Grades: 5 4 
+C++ Grades: 0 2 
+
+Student: Nowy student
+Math Grades: Brak ocen
+C++ Grades: Brak ocen
+
